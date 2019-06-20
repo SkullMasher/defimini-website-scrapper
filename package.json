@@ -1,0 +1,15 @@
+{
+  "name": "defimini",
+  "version": "1.0.0",
+  "description": "Defimini.com scrapper using nightmareJS (Jimbo)",
+  "main": "index.js",
+  "dependencies": {
+    "nightmare": "^3.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "make test"
+  },
+  "author": "https://skullmasher.io",
+  "license": "ISC"
+}
