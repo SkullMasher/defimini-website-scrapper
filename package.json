@@ -4,6 +4,7 @@
   "description": "Defimini.com scrapper using nightmareJS (Jimbo)",
   "main": "index.js",
   "dependencies": {
+    "d3-dsv": "^1.1.1",
     "nightmare": "^3.0.2"
   },
   "devDependencies": {},
