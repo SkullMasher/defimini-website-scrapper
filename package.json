@@ -1,7 +1,7 @@
 {
   "name": "defimini",
   "version": "1.0.0",
-  "description": "Defimini.com scrapper using nightmareJS (Jimbo)",
+  "description": "Defimini.com Website Scrapper",
   "main": "index.js",
   "dependencies": {
     "d3-dsv": "^1.1.1",
@@ -9,6 +9,7 @@
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node index.js",
     "test": "make test"
   },
   "author": "https://skullmasher.io",
