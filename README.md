@@ -1,0 +1,3 @@
+# Web scrapper exemple using Nightmare and modern Javascript
+Jimbo product extraction from defimini website : https://www.defimini.com.
+Uses the Nightmare library to otomate a browser (electron/chromium) with "modern" javascript : async/await, promise, spread operator, template string...
