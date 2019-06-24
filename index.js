@@ -36,7 +36,23 @@ const getCarPartUrls = async () => {
     console.error(e)
   }
 }
+const evaluateProduct = ($product) => {
+  // selectors list
+  const allProducts = document.querySelectorAll($product)
+  const $price = '.cc-shop-product-price-current'
+  const $productName = '.cc-shop-product-desc .fn'
+  const $productDescription = '.cc-shop-product-desc description'
+  const data = []
 
+  allProducts.forEach(product => {
+    const price = `${product.querySelector($price).getAttribute('content')}€`
+    const productName = product.querySelector($productName).textContent
+
+    data.push({prix: price, nomproduit: productName})
+  })
+
+  return data
+}
 const getInfoFromURL = async (URL) => {
   const nightmare = new Nightmare(nightmareOptions)
   // let URL = 'https://www.defimini.com/pieces-automobiles/anciennes-1-50/'
@@ -66,6 +82,7 @@ const getInfoFromURL = async (URL) => {
       }, $product)
       .end()
 
+    console.log(`${result.length} product found`)
     return result
   } catch (e) {
     console.error(e)
@@ -74,17 +91,21 @@ const getInfoFromURL = async (URL) => {
 
 // Create an array of object, each obect will be a line in the CSV
 const csvContent = async () => {
-  const urls = await getCarPartUrls()
-
+  // const urls = await getCarPartUrls()
+  const urls = [
+    'https://www.defimini.com/pieces-automobiles/anciennes-1-50/',
+    'https://www.defimini.com/pieces-automobiles/anciennes-2-50/'
+    // 'https://www.defimini.com/pieces-automobiles/anciennes-3/'
+  ]
   const series = urls.reduce(async (queue, url) => {
     const dataArray = await queue
-    dataArray.push(getInfoFromURL(url))
+    dataArray.push(await getInfoFromURL(url))
     return dataArray
   }, Promise.resolve([]))
 
   series.then(res => {
     console.log('Series result')
-    console.log(res)
+    console.log(res.length)
   })
 }
 
