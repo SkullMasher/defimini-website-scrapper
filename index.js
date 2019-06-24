@@ -12,10 +12,6 @@ const nightmareOptions = {
   darkTheme: true
 }
 
-// Get all info into the car part page
-// put into a csv
-// add the info to the csv
-
 const getCarPartUrls = async () => {
   const nightmare = new Nightmare(nightmareOptions)
   const pieceAutoLink = 'https://www.defimini.com/pieces-automobiles/'
@@ -28,7 +24,7 @@ const getCarPartUrls = async () => {
       .goto(pieceAutoLink)
       .wait($carPartLinks)
       .evaluate($carPartLinks => {
-        // same as Array.from, transforms a nodelist into an array
+        // same as Array.from, transforms a nodelist into an array using spread operator
         return [...document.querySelectorAll($carPartLinks)]
           .map(elem => elem.href)
       }, $carPartLinks)
@@ -43,7 +39,6 @@ const getCarPartUrls = async () => {
 
 getInfoFromURL = async (URL) => {
   const nightmare = new Nightmare(nightmareOptions)
-  // let URL = 'https://www.defimini.com/pieces-automobiles/anciennes-1-50/'
   const $product = '.j-product'
   console.log(`Get info from ${URL}`)
 
