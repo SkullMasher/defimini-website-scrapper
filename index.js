@@ -1,3 +1,7 @@
+const fs = require('fs')
+const { promisify } = require('util')
+const writeFileAsync = promisify(fs.writeFile)
+const { csvFormat } = require('d3-dsv')
 const Nightmare = require('nightmare')
 // https://github.com/electron/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions
 const nightmareOptions = {
@@ -93,59 +97,36 @@ const getInfoFromURL = async (URL) => {
 const csvContent = async () => {
   // const urls = await getCarPartUrls()
   const urls = [
-    'https://www.defimini.com/pieces-automobiles/anciennes-1-50/'
-    // 'https://www.defimini.com/pieces-automobiles/anciennes-2-50/'
+    'https://www.defimini.com/pieces-automobiles/anciennes-1-50/',
+    'https://www.defimini.com/pieces-automobiles/anciennes-2-50/'
     // 'https://www.defimini.com/pieces-automobiles/anciennes-3/'
   ]
-  const series = urls.reduce(async (queue, url, index) => {
-    const dataArray = await queue
+
+  const series = urls.reduce(async (accumulator, url) => {
+    const dataArray = await accumulator
     dataArray.push(await getInfoFromURL(url))
     return dataArray
+  // Reduce initial value is an already resolved Promise object, so that reduce
+  // has a Promise to start with.
   }, Promise.resolve([]))
 
-  series.then(res => {
-    console.log('Series result')
-    console.log(res)
-    console.log(`${res.length} total product found across ${urls.length} pages`)
-  })
+  const content = await series
+  const mergeContent = content.flat()
+  console.log('-------------------------------------------------------------')
+  console.log(`${mergeContent.length} total product found across ${urls.length} pages`)
+
+  return mergeContent
 }
 
-csvContent()
-// console.log(getCarPartUrls())
-// getCarPartUrls()
-//   .then(urls => {
-//     console.log(`${urls.length} urls found`)
-    // urls.reduce((accumulator, url) => {
-    //   return accumulator.then(titles => {
-    //     return nightmare.goto(url)
-    //       .wait('body')
-    //       .title()
-    //       .then(result => {
-    //         titles.push(result)
-    //         return titles
-    //       })
-    //   })
-    // }, Promise.resolve([])).then(titles => {
-    //   nightmare.end(() => {
-    //     console.table(titles)
-    //   })
-    // })
-  // })
-  // .catch(err => console.log(err))
+const createCSV = async () => {
+  const csvData = csvFormat(await csvContent())
+  try {
+    console.log(`Product added to definimi.csv`)
+    return await writeFileAsync('definimi.csv', csvData, { encoding: 'utf8' })
+  } catch (e) {
+    console.error(e)
+  }
+}
 
-  // var urls = ['https://skullmasher.io', 'https://www.heartlessgaming.com', 'https://github.com']
-  // urls.reduce((accumulator, url) => {
-  //   return accumulator.then(titles => {
-  //     return nightmare.goto(url)
-  //       .wait('body')
-  //       .title()
-  //       .then(result => {
-  //         titles.push(result)
-  //         return titles
-  //       })
-  //   })
-  // }, Promise.resolve([])).then(titles => {
-  //   nightmare.end(() => {
-  //     console.table(titles)
-  //   })
-  // })
+// run the entire thing ! MAGIC !
+createCSV()
