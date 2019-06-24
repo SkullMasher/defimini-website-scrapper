@@ -56,7 +56,7 @@ series.then(data => {
   data.filter(i => {
     console.log(i)
   })
-  const csvData = csvFormat(data.filter(i => i))
+  const csvData = csvFormat(data)
   writeFileSync('./output.csv', csvData, { encoding: 'utf8' })
 })
 .catch(e => console.error(e))
