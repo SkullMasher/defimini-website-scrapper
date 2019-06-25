@@ -2,6 +2,7 @@ const fs = require('fs')
 const { promisify } = require('util')
 const writeFileAsync = promisify(fs.writeFile)
 const { csvFormat } = require('d3-dsv')
+const xmlFormat = require('xmlbuilder')
 const Nightmare = require('nightmare')
 // https://github.com/electron/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions
 const nightmareOptions = {
@@ -88,8 +89,8 @@ getInfoFromURL = async (URL) => {
   }
 }
 
-// Create an array of object, each obect will be a line in the CSV
-const csvContent = async () => {
+// Create an array of object, each object contains a single product data
+const defiminiData = async () => {
   const urls = await getCarPartUrls()
   // const urls = [
   //   'https://www.defimini.com/pieces-automobiles/pieces-autos-chrysler-14/'
@@ -111,16 +112,56 @@ const csvContent = async () => {
   return mergeContent
 }
 
-const createCSV = async () => {
-  csvColumnName = ['categorie', 'titre', 'description', 'prix', 'poix', 'url photo']
-  const csvData = csvFormat(await csvContent())
+const createCSV = async (data) => {
+  const outFile = 'definimi.csv'
+  const csvData = csvFormat(data)
+
   try {
-    console.log(`Product added to definimi.csv`)
-    return await writeFileAsync('definimi.csv', csvData, { encoding: 'utf8' })
+    console.log(`Product added to ${outFile}`)
+    return await writeFileAsync(outFile, csvData, { encoding: 'utf8' })
   } catch (e) {
     console.error(e)
   }
 }
 
-// run the entire thing ! MAGIC !
-createCSV()
+const createXML = async (data) => {
+  const outFile = 'definimi.xml'
+  const xmlData = {
+    wannonce: {
+      annonce: data.map((annonce, index) => {
+        return {
+          id: index,
+          category: '17',
+          country: 'fr',
+          address: '',
+          city: 'Rambervillers',
+          postcode: '88700',
+          region: '',
+          title: annonce.category,
+          content: annonce.productDescription,
+          price: annonce.price,
+          phone: '06 59 47 59 02',
+          pictures: {
+            picture_url: annonce.pictures.map(image => image)
+          }
+        }
+      })
+    }
+  }
+
+  try {
+    const xml = xmlFormat.create(xmlData, { encoding: 'utf-8' }).end({ pretty: true })
+    console.log(`Product added to ${outFile}`)
+    return await writeFileAsync(outFile, xml, { encoding: 'utf8' })
+  } catch (e) {
+    console.err(e)
+  }
+}
+
+const run = async () => {
+  const data = await defiminiData()
+  // createCSV(data)
+  createXML(data)
+}
+
+run()
