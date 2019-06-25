@@ -64,7 +64,7 @@ getInfoFromURL = async (URL) => {
           const productName = productFind($productName).textContent
           const productDescription = productFind($productDescription).innerText.replace(/\n/g, ' ').trim()
           const price = `${productFind($price).getAttribute('content')}€`
-          const weight = productFind($weight).textContent.trim()
+          const weight = (productFind($weight) !== null) ? productFind($weight).textContent.trim() : ''
           const pictures = [...product.querySelectorAll($pictures)].map(img => img.src)
 
           data.push({
@@ -81,6 +81,7 @@ getInfoFromURL = async (URL) => {
       }, $product)
       .end()
 
+    console.log(`${result.length} product found`)
     return result
   } catch (e) {
     console.error(e)
@@ -91,7 +92,7 @@ getInfoFromURL = async (URL) => {
 const csvContent = async () => {
   const urls = await getCarPartUrls()
   // const urls = [
-  //   'https://www.defimini.com/pieces-automobiles/anciennes-1-50/'
+  //   'https://www.defimini.com/pieces-automobiles/pieces-autos-chrysler-14/'
   // ]
 
   const series = urls.reduce(async (accumulator, url) => {
