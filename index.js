@@ -47,25 +47,40 @@ getInfoFromURL = async (URL) => {
       .goto(URL)
       .wait($product)
       .evaluate($product => {
-        const allProducts = document.querySelectorAll($product)
-        const $price = '.cc-shop-product-price-current'
-        const $productName = '.cc-shop-product-desc .fn'
-        const $productDescription = '.cc-shop-product-desc description'
         const category = document.title.split('- defimini')[0].trim()
+        // $ means a selector (shoutout to jquery)
+        const $productName = '.cc-shop-product-desc .fn'
+        const $productDescription = '.cc-shop-product-desc .description'
+        const $price = '.cc-shop-product-price-current'
+        const $weight = '.j-product-weight'
+        const $pictures = '.cc-shop-product-img img'
         const data = []
 
-        allProducts.forEach(product => {
-          const price = `${product.querySelector($price).getAttribute('content')}€`
-          const productName = product.querySelector($productName).textContent
+        document.querySelectorAll($product).forEach(product => {
+          const productFind = selector => {
+            return product.querySelector(selector)
+          }
+          // get & format product info using the previously mention selector
+          const productName = productFind($productName).textContent
+          const productDescription = productFind($productDescription).innerText.replace(/\n/g, ' ').trim()
+          const price = `${productFind($price).getAttribute('content')}€`
+          const weight = productFind($weight).textContent.trim()
+          const pictures = [...product.querySelectorAll($pictures)].map(img => img.src)
 
-          data.push({categorie: category, prix: price, nomproduit: productName})
+          data.push({
+            category: category,
+            productName: productName,
+            productDescription: productDescription,
+            price: price,
+            weight: weight,
+            pictures: pictures
+          })
         })
 
         return data
       }, $product)
       .end()
 
-    console.log(`${result.length} product found`)
     return result
   } catch (e) {
     console.error(e)
@@ -75,6 +90,9 @@ getInfoFromURL = async (URL) => {
 // Create an array of object, each obect will be a line in the CSV
 const csvContent = async () => {
   const urls = await getCarPartUrls()
+  // const urls = [
+  //   'https://www.defimini.com/pieces-automobiles/anciennes-1-50/'
+  // ]
 
   const series = urls.reduce(async (accumulator, url) => {
     const dataArray = await accumulator
@@ -93,6 +111,7 @@ const csvContent = async () => {
 }
 
 const createCSV = async () => {
+  csvColumnName = ['categorie', 'titre', 'description', 'prix', 'poix', 'url photo']
   const csvData = csvFormat(await csvContent())
   try {
     console.log(`Product added to definimi.csv`)
