@@ -6,7 +6,7 @@ const xmlFormat = require('xmlbuilder')
 const Nightmare = require('nightmare')
 // https://github.com/electron/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions
 const nightmareOptions = {
-  show: true,
+  show: false,
   width: 1366,
   height: 768,
   title: 'Defimini Jimbo Extractor',
@@ -92,6 +92,7 @@ getInfoFromURL = async (URL, index, urlsLength) => {
 // Create an array of object, each object contains a single product data
 const defiminiData = async () => {
   const urls = await getCarPartUrls()
+  // const urls = ['https://www.defimini.com/pieces-automobiles/anciennes-1-50']
   const series = urls.reduce(async (accumulator, url, index, urls) => {
     const urlsLength = urls.length
     const dataArray = await accumulator
@@ -136,7 +137,7 @@ const createXML = async (data) => {
           region: 'Grand Est',
           title: annonce.category,
           content: annonce.productDescription,
-          price: annonce.price,
+          price: annonce.price.slice(0, -1), // remove curency
           phone: '06 59 47 59 02',
           pictures: {
             picture_url: annonce.pictures.map(image => image)
