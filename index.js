@@ -38,10 +38,10 @@ const getCarPartUrls = async () => {
   }
 }
 
-getInfoFromURL = async (URL) => {
+getInfoFromURL = async (URL, index, urlsLength) => {
   const nightmare = new Nightmare(nightmareOptions)
   const $product = '.j-product'
-  console.log(`Get info from ${URL}`)
+  console.log(`[${index}/${urlsLength}] Get info from ${URL}`)
 
   try {
     const result = await nightmare
@@ -92,13 +92,10 @@ getInfoFromURL = async (URL) => {
 // Create an array of object, each object contains a single product data
 const defiminiData = async () => {
   const urls = await getCarPartUrls()
-  // const urls = [
-  //   'https://www.defimini.com/pieces-automobiles/pieces-autos-chrysler-14/'
-  // ]
-
-  const series = urls.reduce(async (accumulator, url) => {
+  const series = urls.reduce(async (accumulator, url, index, urls) => {
+    const urlsLength = urls.length
     const dataArray = await accumulator
-    dataArray.push(await getInfoFromURL(url))
+    dataArray.push(await getInfoFromURL(url, index + 1, urlsLength))
     return dataArray
   // Reduce initial value is an already resolved Promise object, so that reduce
   // has a Promise to start with.
@@ -133,10 +130,10 @@ const createXML = async (data) => {
           id: index,
           category: '17',
           country: 'fr',
-          address: '',
+          address: 'Ruelle du Pre Didier',
           city: 'Rambervillers',
           postcode: '88700',
-          region: '',
+          region: 'Grand Est',
           title: annonce.category,
           content: annonce.productDescription,
           price: annonce.price,
