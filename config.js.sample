@@ -1,0 +1,7 @@
+module.exports = {
+  country: 'fr',
+  city: 'of evil',
+  postcode: '42666',
+  region: 'Bretagne sur Loire Atlantique',
+  phone: '06 66 42 42 42'
+}

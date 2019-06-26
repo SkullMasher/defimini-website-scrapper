@@ -1,3 +1,4 @@
+const config = require('./config')
 const fs = require('fs')
 const { promisify } = require('util')
 const writeFileAsync = promisify(fs.writeFile)
@@ -91,8 +92,8 @@ getInfoFromURL = async (URL, index, urlsLength) => {
 
 // Create an array of object, each object contains a single product data
 const defiminiData = async () => {
-  const urls = await getCarPartUrls()
-  // const urls = ['https://www.defimini.com/pieces-automobiles/anciennes-1-50']
+  // const urls = await getCarPartUrls()
+  const urls = ['https://www.defimini.com/pieces-automobiles/anciennes-1-50']
   const series = urls.reduce(async (accumulator, url, index, urls) => {
     const urlsLength = urls.length
     const dataArray = await accumulator
@@ -130,15 +131,14 @@ const createXML = async (data) => {
         return {
           id: index,
           category: '17',
-          country: 'fr',
-          address: 'Ruelle du Pre Didier',
-          city: 'Rambervillers',
-          postcode: '88700',
-          region: 'Grand Est',
-          title: annonce.category,
+          country: config.country,
+          city: config.city,
+          postcode: config.postcode,
+          region: config.region,
+          title: annonce.productName,
           content: annonce.productDescription,
           price: annonce.price.slice(0, -1), // remove curency
-          phone: '06 59 47 59 02',
+          phone: config.phone,
           pictures: {
             picture_url: annonce.pictures.map(image => image)
           }
