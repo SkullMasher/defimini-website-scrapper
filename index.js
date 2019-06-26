@@ -92,8 +92,8 @@ getInfoFromURL = async (URL, index, urlsLength) => {
 
 // Create an array of object, each object contains a single product data
 const defiminiData = async () => {
-  // const urls = await getCarPartUrls()
-  const urls = ['https://www.defimini.com/pieces-automobiles/anciennes-1-50']
+  const urls = await getCarPartUrls()
+  // const urls = ['https://www.defimini.com/pieces-automobiles/anciennes-1-50']
   const series = urls.reduce(async (accumulator, url, index, urls) => {
     const urlsLength = urls.length
     const dataArray = await accumulator
