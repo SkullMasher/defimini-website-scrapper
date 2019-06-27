@@ -112,7 +112,7 @@ const defiminiData = async () => {
 }
 
 const createCSV = async (data) => {
-  const outFile = 'definimi.csv'
+  const outFile = 'defimini.csv'
   const csvData = csvFormat(data)
 
   try {
