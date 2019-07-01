@@ -132,6 +132,7 @@ const createXML = async (data) => {
           id: index,
           category: '17',
           country: config.country,
+          address: ' ',
           city: config.city,
           postcode: config.postcode,
           region: config.region,
@@ -157,9 +158,13 @@ const createXML = async (data) => {
 }
 
 const run = async () => {
-  const data = await defiminiData()
-  // createCSV(data)
-  createXML(data)
+  try {
+    const data = await defiminiData()
+    createCSV(data)
+    createXML(data)
+  } catch (e) {
+    console.err(e)
+  }
 }
 
 run()
