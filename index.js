@@ -124,25 +124,27 @@ const createCSV = async (data) => {
 }
 
 const createXML = async (data) => {
-  const outFile = 'definimi.xml'
+  const outFile = 'defimini.xml'
   const xmlData = {
     wannonce: {
       annonce: data.map((annonce, index) => {
         return {
           id: index,
           category: '17',
-          country: config.country,
-          address: ' ',
-          city: config.city,
-          postcode: config.postcode,
-          region: config.region,
           title: annonce.productName,
           content: annonce.productDescription,
           price: annonce.price.slice(0, -1), // remove curency
-          phone: config.phone,
+          country: config.country,
+          city: config.city,
+          postcode: config.postcode,
+          region: config.region,
+          address: ' ',
           pictures: {
             picture_url: annonce.pictures.map(image => image)
-          }
+          },
+          phone: config.phone,
+          agency: config.agency,
+          email: config.email
         }
       })
     }
