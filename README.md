@@ -1,6 +1,9 @@
 # Defimini.com Website Scrapper
 Jimbo product info extraction from defimini website : https://www.defimini.com.
 Uses the [Nightmare library](https://github.com/segmentio/nightmare) to automate a browser (electron/chromium) with "modern" javascript : async/await, promise, spread operator, template string...
+
+I have received full client permission to scrap this website.
+
 ## Usage
 Intall the dependencies
 ```
